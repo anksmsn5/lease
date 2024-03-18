@@ -124,7 +124,7 @@
 							 </select>
                     </div>
                     <div class="form-group col-md-12">
-                    <label for="exampleInputConfirmPassword1">Tenant Criterias</label>
+                    <label for="exampleInputConfirmPassword1">Tenant Criteria</label>
                          <input type="text" name="tenant_criteria" class="form-control" value="<?php echo $property->tenant_criteria?>">
                     </div>
     
