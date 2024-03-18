@@ -127,7 +127,7 @@
                     <label for="exampleInputConfirmPassword1">Tenant Criteria</label>
                          <input type="text" name="tenant_criteria" class="form-control" value="<?php echo $property->tenant_criteria?>">
                     </div>
-
+    
                      
 
                      
