@@ -23,19 +23,17 @@
                   <div class="card-body table-responsive" style="overflow-x: scroll; display:block">
                     <table id="myTable" class="table table-bordered" width="100%">
         <thead>
-            <tr>
-                <th>Agreement</th>
-               
-                <th>Tenant </th>
-                <th>Property Type</th>
-                <th>Property Details</th>
-                <th>Owner Details</th>
-                <th>Rent Start Date</th>
-                <th>Rent Amount</th>
-                <th>Security Deposit</th>
-                
-                <th>Action</th>
-            </tr>
+				<tr>
+						<th>Agreement ID</th>
+						<th>Tenant Name</th>
+						<th>Property Name</th>
+						<th>Point of Contact</th>
+						<th>Rent Date</th>
+						<th>Agreement Date</th>
+						<th>Basic Rent</th>
+						<th>Security Deposit</th>
+						<th>Action</th>
+				</tr>
         </thead>
         <tbody>
         </tbody>
@@ -69,15 +67,42 @@
               columns: [
                   
                   {data: 'agreement_id', name: 'agreement_id'},
-                  {data: 'tenant_name', name: 'tenant_name'},
-                  {data: 'property_type', name: 'property_type'},
-                  {data:'property_id',name:'property_id'},
-                  {data: 'owner_name', name: 'owner_name'},
-                   {data: 'rent_start_date', name: 'rent_start_date'},
-                   {data: 'rent_amount', name: 'rent_amount'},
-                   {data: 'security_amount', name: 'security_amount'},
+                  { data: 'tenant_name', name:'tenant_name',
+						   render: function ( data, type, row ) 
+						   {
+							 return row.tenant_name + '<br><br> Mob:<a href="tel:'+row.tenant_mobile+'"> ' + row.tenant_mobile+'</a>' 
+						   }
+              
+                    },
+                  
+                  {data:'property_name',name:'property_name'},
+                  { data: 'contact_name', name:'contact_name',
+						   render: function ( data, type, row ) 
+						   {
+							 return row.contact_name + '<br><br> Mob:<a href="tel:'+row.contact_mobile+'"> ' + row.contact_mobile+'</a>' 
+						   }
+              
+                    },
+                  { data: 'rent_date', name:'rent_date',
+						   render: function ( data, type, row ) 
+						   {
+							 return 'Star Date: '+row.start_date + '<br><br> End Date:'+row.end_date 
+						   }
+              
+                    }, { data: 'end_date', name:'end_date',
+						   render: function ( data, type, row ) 
+						   {
+							 return 'Star Date: '+row.start_date + '<br><br> End Date:'+row.end_date 
+						   }
+              
+                    },
                    
+                  
+                   
+                  {data: 'rent_amount', name: 'rent_amount'},
+                  {data: 'security_amount', name: 'security_amount'},
                   {data: 'action', name: 'action'},
+                  
               ]
           });
         });

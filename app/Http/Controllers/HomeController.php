@@ -51,8 +51,8 @@ class HomeController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.url('edit-property/'.$row['id']).'" onclick="return actionconfirm()" class="edit btn btn-success btn-sm">Edit</a>
-					<a href="'.url('delete-property/'.$row['id']).'" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm">Delete</a>';
+                    $actionBtn = '<a href="'.url('edit-property-type/'.$row['id']).'" onclick="return actionconfirm()" class="edit btn btn-success btn-sm">Edit</a>
+					<a href="'.url('delete-property-type/'.$row['id']).'" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm">Delete</a>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])
@@ -60,6 +60,15 @@ class HomeController extends Controller
         }
 		
 	
+	}
+	
+	public function edit_property_type($id)
+	{
+		$propertytype=PropertyType::find($id);
+		
+		return view("master.edit_property_type",["propertytype"=>$propertytype]);
+		
+		
 	}
 	
 	
@@ -70,11 +79,41 @@ class HomeController extends Controller
 	
 	public function storePropertyType(Request $request)
 	{
+		$validated = $request->validate([
+        'property_type' => 'required|unique:property_types|max:255',
+        'property_no' => 'required',
+    ]);
+	
 		$pt=new PropertyType();
 		$pt->property_type=$request->property_type;
+		$pt->property_no=$request->property_no;
 		$pt->save();
 		
-		return redirect()->back()->with("success","Prperty Type Added successfully.");
+		return redirect()->back()->with("success","Property Type Added successfully.");
+		
+		
+	}
+	
+	public function get_property_no(Request $request)
+	{
+		$query=PropertyType::find($request->id);
+		return $query->property_no;
+	}
+
+public function delete_property_type($id)
+{
+PropertyType::find($id)->delete();
+return redirect()->back()->with("success","Property Type Deleted successfully.");
+
+}	
+	public function updatePropertyType(Request $request)
+	{
+		$pt=PropertyType::find($request->id);
+		$pt->property_type=$request->property_type;
+		$pt->property_no=$request->property_no;
+		$pt->save();
+		
+		return redirect("property-type")->with("success","Property Type Added successfully.");
 		
 		
 	}
@@ -148,20 +187,26 @@ if ($request->ajax()) {
     })->select("properties.*","property_types.property_type")->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
+				->addColumn('statusBtn', function($row){
 					if($row['availability_status']=='Available')
 					{
-						 $actionBtn ='<button type="button" class="btn btn-success">Available</button>';
+						 $statusBtn ='<button type="button" class="btn btn-success btn-sm"><i class="fa fa-check-circle-o" aria-hidden="true"></i></button>';
 					}
 					else
 					{
-						 $actionBtn ='<button type="button" class="btn btn-danger">Not Available</button>';
+						 $statusBtn ='<button type="button" class="btn btn-danger"><i class="fa fa-ban" aria-hidden="true"></i></button>';
 					}
-                    $actionBtn .= '<a href="'.url('edit-property_type/'.$row['id']).'" onclick="return actionconfirm()" class="edit btn btn-success btn-sm">Edit</a> 
-					<a href="'.url('delete-property_type/'.$row['id']).'" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm">Delete</a>';
+					
+					return $statusBtn;
+				})
+                ->addColumn('action', function($row){
+					 $actionBtn = '<a href="'.url('details/'.$row['slug']).'" target="_blank" class="edit btn btn-primary btn-sm"><i class="fa fa-eye"></i></a> 
+					 ';
+                    $actionBtn .= '<a href="'.url('edit-property/'.$row['id']).'" onclick="return actionconfirm()" class="edit btn btn-success btn-sm"><i class="fa fa-edit"></i></a> 
+					<a href="'.url('delete-property/'.$row['id']).'" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
                     return $actionBtn;
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action','statusBtn'])
                 ->make(true);
         }
     }
@@ -181,15 +226,18 @@ if ($request->ajax()) {
 	 
         
         $mid=Property::max("id");
-        $property_id=str_pad(($mid+1),6,"0",STR_PAD_LEFT);
+        $property_id="P".str_pad(($mid+1),6,"0",STR_PAD_LEFT);
         $pr=new Property();
         $pr->property_id=$property_id;
         $pr->property_type=$request->property_type;
         $pr->property_name=$request->property_name;
         $pr->address=$request->address;
+        $pr->owner_name=$request->owner_name;
+        $pr->carpet_area=$request->carpet_area;
          
         $pr->property_size=$request->property_size;
         $pr->price_rent=$request->price_rent;
+         
         $pr->description=$request->description;
         $pr->amenities=implode(",",$request->amenities); 
         
@@ -201,8 +249,23 @@ if ($request->ajax()) {
        
         $pr->facilities=implode(",",$request->facilities);
         $pr->furnishing=$request->furnishing_status;
-      
-        $pr->tenant_criteria=$request->tenant_criteria;
+		$pr->property_no=$request->property_no;
+		$pr->owner_mobile_no=$request->owner_mobile_no;
+		$pr->owner_email=$request->owner_email;
+		$pr->car_parking=$request->car_parking;
+		$pr->facing_direction=$request->facing_direction;
+		$pr->maintenance_charge=$request->maintenance_charge;
+		$pr->water_availability=$request->water_availability;
+		$pr->status_of_electricity=$request->status_of_electricity;
+		$pr->property_no=$request->property_no;
+		$pr->floor=$request->floor;
+		$pr->landmark=$request->landmark;
+		$pr->country=$request->country;
+		$pr->state=$request->state;
+		$pr->city=$request->city;
+		$pr->slug=strtolower(implode("-",explode(" ",$request->property_name))).$property_id;
+		
+	 
         
         $pr->save();
 
@@ -216,9 +279,12 @@ if ($request->ajax()) {
        $pr->property_type=$request->property_type;
         $pr->property_name=$request->property_name;
         $pr->address=$request->address;
+        $pr->owner_name=$request->owner_name;
+        $pr->carpet_area=$request->carpet_area;
          
         $pr->property_size=$request->property_size;
         $pr->price_rent=$request->price_rent;
+        
         $pr->description=$request->description;
         $pr->amenities=implode(",",$request->amenities); 
         
@@ -230,8 +296,20 @@ if ($request->ajax()) {
        
         $pr->facilities=implode(",",$request->facilities);
         $pr->furnishing=$request->furnishing_status;
-      
-        $pr->tenant_criteria=$request->tenant_criteria;
+		$pr->property_no=$request->property_no;
+		$pr->owner_mobile_no=$request->owner_mobile_no;
+		$pr->owner_email=$request->owner_email;
+		$pr->car_parking=$request->car_parking;
+		$pr->facing_direction=$request->facing_direction;
+		$pr->maintenance_charge=$request->maintenance_charge;
+		$pr->water_availability=$request->water_availability;
+		$pr->status_of_electricity=$request->status_of_electricity;
+		$pr->property_no=$request->property_no;
+		$pr->floor=$request->floor;
+		$pr->landmark=$request->landmark;
+		$pr->country=$request->country;
+		$pr->state=$request->state;
+		$pr->city=$request->city;
         $pr->save();
 
         return redirect("property-list")->with("success","Property Updated Succesfully.");
@@ -266,11 +344,13 @@ if ($request->ajax()) {
     public function edit_property($id)
     {
         $property=Property::find($id);
-		 
+		$countries=Country::orderBy('country','asc')->get();
+		$states=State::where('country_id',$property->country)->orderBy('state','asc')->get();
+		$cities=City::where('state_id',$property->state)->orderBy('city','asc')->get();
         $amenities=Amenity::orderBy("amenity","asc")->get();
 		$facilities=Facility::orderBy("facility","asc")->get();
 		$type=PropertyType::orderBy("property_type","asc")->get();
-        return view("admin.property.edit",["property"=>$property,"amenities"=>$amenities,"facilities"=>$facilities,"type"=>$type]);
+        return view("admin.property.edit",["property"=>$property,"amenities"=>$amenities,"facilities"=>$facilities,"type"=>$type,"countries"=>$countries,"states"=>$states,"cities"=>$cities]);
     }
 
     public function delete_property($id)
@@ -288,14 +368,38 @@ if ($request->ajax()) {
     public function rent_agreement()
     {
 		$type=PropertyType::orderBy("property_type","asc")->get();
-         $countries=Country::orderBy('country','asc')->get();
-        return view("admin.property.rent_agreement",["countries"=>$countries,"type"=>$type]);
+		$countries=Country::orderBy('country','asc')->get();
+		$responsibilities=Responsibility::all();
+        return view("admin.property.rent_agreement",["countries"=>$countries,"type"=>$type,"responsibilities"=>$responsibilities]);
     }
+	
+	public function edit_agreement($id)
+	{
+		$type=PropertyType::orderBy("property_type","asc")->get();
+		$countries=Country::orderBy('country','asc')->get();
+		$responsibilities=Responsibility::all();
+		$agreement=RentAgreement::find($id);
+		$properties=Property::where("property_type",$agreement->property_id)->get();
+		 
+		$property=DB::table('properties')
+    ->select('properties.*','countries.country as countryname','states.state as statename','cities.city as cityname','property_types.property_type as ptype')
+    ->join('countries','countries.id','=','properties.country')
+    ->join('states','states.id','=','properties.state')
+    ->join('cities','cities.id','=','properties.city')
+    ->join('property_types','property_types.id','=','properties.property_type')
+    ->where('properties.id',$agreement->property_id)
+    ->first();
+	$tenant=Tenant::find($agreement->tenant_id);
+	$states=State::where("country_id",$tenant->country)->get();
+	$cities=City::where("state_id",$tenant->state)->get();
+        return view("admin.property.edit_rent_agreement",["countries"=>$countries,"type"=>$type,"responsibilities"=>$responsibilities,"agreement"=>$agreement,"properties"=>$properties,"property"=>$property,"tenant"=>$tenant,"states"=>$states,"cities"=>$cities]);
+		
+	}
 
     public function property_by_type(Request $request)
     {
         $html='<option value="">Select</option>';
-        $property=Property::where("property_type",$request->id)->get();
+        $property=Property::where("property_type",$request->id)->where('availability_status','Available')->get();
 
         foreach($property as $prop)
         {
@@ -310,19 +414,20 @@ if ($request->ajax()) {
         $html='';
        
     $data= DB::table('properties')
-    ->select('properties.*','countries.country as countryname','states.state as statename','cities.city as cityname')
+    ->select('properties.*','countries.country as countryname','states.state as statename','cities.city as cityname','property_types.property_type as ptype')
     ->join('countries','countries.id','=','properties.country')
     ->join('states','states.id','=','properties.state')
     ->join('cities','cities.id','=','properties.city')
+    ->join('property_types','property_types.id','=','properties.property_type')
     ->where('properties.id',$request->id)
     ->first();
         $html='
         <table class="table">
             <tr>
                 <td><b>Property Id :</b> '.$data->property_id.'</td>
-                <td><b>Property Type :</b> '.$data->property_type.'</td>
-                <td><b>Property Area :</b> '.$data->property_size.'</td>
-                <td><b>Property Age : </b>'.$data->property_age.'</td>
+                <td><b>Property Type :</b> '.$data->ptype.'</td>
+                <td><b>Saleable Area :</b> '.$data->property_size.'</td>
+                <td><b>Carpet Area :</b> '.$data->carpet_area.'</td>
             </tr>
 
              <tr>
@@ -335,15 +440,15 @@ if ($request->ajax()) {
              <tr>
                 <td><b>Property For  :</b> '.$data->type.'</td>
                 <td><b>Owner Name  :</b> '.$data->owner_name.'</td>
-                <td><b>Owner Email  :</b> '.$data->email.'</td>
-                <td><b>Owner Phone  :</b> '.$data->phone_no.'</td>
+                <td><b>Owner Email  :</b> '.$data->owner_email.'</td>
+                <td><b>Owner Phone  :</b> '.$data->owner_mobile_no.'</td>
                 
             </tr>
             <tr>
-                <td><b>Rent/Price  :</b> '.$data->price_rent.'</td>
+                <td><b>Basic Rent  :</b> '.$data->price_rent.'</td>
                 <td><b>Furnishing Status  :</b> '.$data->furnishing.'</td>
                 <td><b>Security Deposit  :</b> '.$data->security_deposit.'</td>
-                <td><b>Property Age  :</b> '.$data->property_age.' Years</td>
+                <td></td>
                 
             </tr>
             <tr>
@@ -356,7 +461,7 @@ return $html;
 
     public function store_agreement(Request $request)
     {
-
+	
         $ten=new Tenant();
         $ten->tenant_name=$request->tenant_name;
         $ten->tenant_email=$request->tenant_email;
@@ -365,8 +470,24 @@ return $html;
         $ten->state=$request->state;
         $ten->city=$request->city;
         $ten->address=$request->address;
+        $ten->pan=$request->pan;
+        $ten->aadhar=$request->aadhar;
+        $ten->tds_no=$request->tds;
+        $ten->gstno=$request->gst_no;
         $ten->save();
 
+		$ownersign = $request->file('ownersign');
+		$destinationPath = 'uploads';
+		$filename1=time().'.'.$ownersign->getClientOriginalExtension();
+        $ownersign->move($destinationPath,$filename1);
+
+		$tenantsign = $request->file('tenantsign');
+		$filename2=time().'ts.'.$tenantsign->getClientOriginalExtension();
+		$destinationPath = 'uploads';
+        $tenantsign->move($destinationPath,time().'ts.'.$filename2);
+
+  
+ 
         $mid=RentAgreement::max("id");
         $agreement_id="AG".str_pad(($mid+1),6,"0",STR_PAD_LEFT);
         $rag=new RentAgreement();
@@ -377,19 +498,139 @@ return $html;
         $rag->rental_terms=$request->rental_terms;
         $rag->start_date=$request->start_date;
         $rag->end_date=$request->end_date;
-        $rag->rent_duration=$request->rent_duration;
+        $rag->agreement_tenure=$request->rent_duration;
         $rag->rent_amount=$request->rent_amount;
-        $rag->rent_start_date=$request->rent_start_date;
+        $rag->maintenance_amount=$request->maintenance_amount;
         $rag->security_amount=$request->security_amount;
+        $rag->fit_out=$request->fit_out;
+        $rag->escalation=$request->escalation;
+        $rag->lockin=$request->lockin;
+        $rag->gst=$request->gst;
+        $rag->notice_period=$request->notice_period;
+        $rag->agreement_start=$request->agreement_start;
+        $rag->agreement_end=$request->agreement_end;
         $rag->security_return_terms=$request->security_return_terms;
-        $rag->tenant_responsibility=$request->tenant_responsibility;
-        $rag->owner_responsibility=$request->owner_responsibility;
+        $rag->tenant_responsibility=implode(", ",$request->tenant_responsibility);
+        $rag->owner_responsibility=implode(", ",$request->owner_responsibility);
         $rag->termination_clause=$request->termination_clause;
+        $rag->contact_name=$request->contact_name;
+        $rag->contact_email=$request->contact_email;
+        $rag->contact_mobile=$request->contact_mobile;
+        $rag->stamp_duty_paid=$request->stamp_duty_paid;        
         $rag->date=$request->date;
+        $rag->ownersign=$filename1;
+        $rag->tenantsign=$filename2;
         $rag->save();
 
+		$property=Property::find($request->property);
+		$property->availability_status='Not Available';
+		$property->save();
         return redirect()->back()->with("success","Agreement Created Successfully.");
+    }  
+	
+	public function update_agreement(Request $request)
+    {
+		echo "<pre>";
+		$frent=$request->rent_amount+$request->maintenance_amount+$request->security_amount;
+		$tds='1';
+		 
+		$gstonrent=($frent*$request->gst)/100;
+		$tdsonrent=($frent*$tds)/100;
+		echo $netfmonthlyrent=$frent-$tdsonrent+$gstonrent;
+		echo "<br>";
+		$rent=$request->rent_amount+$request->maintenance_amount;
+		$tds='1';
+		$duration=$request->rent_duration;
+		$gstonrent=($rent*$request->gst)/100;
+		$tdsonrent=($rent*$tds)/100;
+		
+		echo $netmonthlyrent=$rent-$tdsonrent+$gstonrent;
+		print_r($_POST);
+		
+		die;
+	
+        $ten=Tenant::find($request->tenant_id);
+        $ten->tenant_name=$request->tenant_name;
+        $ten->tenant_email=$request->tenant_email;
+        $ten->tenant_mobile=$request->tenant_mobile;
+        $ten->country=$request->country;
+        $ten->state=$request->state;
+        $ten->city=$request->city;
+        $ten->address=$request->address;
+        $ten->pan=$request->pan;
+        $ten->aadhar=$request->aadhar;
+        $ten->tds_no=$request->tds;
+        $ten->gstno=$request->gst_no;
+        $ten->save();
+if($request->file('ownersign'))
+{
+		$ownersign = $request->file('ownersign');
+		$destinationPath = 'uploads';
+		$filename1=time().'.'.$ownersign->getClientOriginalExtension();
+        $ownersign->move($destinationPath,$filename1);
+}
+if($request->file('tenantsign'))
+{
+	
+	$tenantsign = $request->file('tenantsign');
+		$filename2=time().'ts.'.$tenantsign->getClientOriginalExtension();
+		$destinationPath = 'uploads';
+        $tenantsign->move($destinationPath,time().'ts.'.$filename2);
+}
+  
+ 
+      
+        $rag=RentAgreement::find($request->id);
+        $rag->tenant_id=$ten->id;
+        
+        $rag->property_id=$request->property;
+        $rag->property_type=$request->property_type;
+        $rag->rental_terms=$request->rental_terms;
+        $rag->start_date=$request->start_date;
+        $rag->end_date=$request->end_date;
+        $rag->agreement_tenure=$request->rent_duration;
+        $rag->rent_amount=$request->rent_amount;
+        $rag->maintenance_amount=$request->maintenance_amount;
+        $rag->security_amount=$request->security_amount;
+        $rag->fit_out=$request->fit_out;
+        $rag->escalation=$request->escalation;
+        $rag->lockin=$request->lockin;
+        $rag->gst=$request->gst;
+        $rag->notice_period=$request->notice_period;
+        $rag->agreement_start=$request->agreement_start;
+        $rag->agreement_end=$request->agreement_end;
+        $rag->security_return_terms=$request->security_return_terms;
+        $rag->tenant_responsibility=implode(", ",$request->tenant_responsibility);
+        $rag->owner_responsibility=implode(", ",$request->owner_responsibility);
+        $rag->termination_clause=$request->termination_clause;
+        $rag->contact_name=$request->contact_name;
+        $rag->contact_email=$request->contact_email;
+        $rag->contact_mobile=$request->contact_mobile;
+        $rag->stamp_duty_paid=$request->stamp_duty_paid;        
+        $rag->date=$request->date;
+		if($request->file('ownersign'))
+{
+        $rag->ownersign=$filename1;
+}
+if($request->file('tenantsign'))
+{
+        $rag->tenantsign=$filename2;
+}
+       $rag->save();
+
+		 
+        return redirect("rent-agreement-list")->with("success","Agreement Updated Successfully.");
     }
+
+	public function delete_agreement($id)
+	{
+		$query=RentAgreement::find($id);
+		$prop=Property::find($query->property_id);
+		$prop->availability_status='Available';
+		$prop->save();
+		$query->delete();
+		return redirect("rent-agreement-list")->with("success","Agreement Updated Successfully.");
+	}
 
     public function agreements()
     {
@@ -400,14 +641,15 @@ return $html;
     {
         if ($request->ajax()) {
             $data =  DB::table('rent_agreements')
-                    ->select('rent_agreements.*','tenants.tenant_name','properties.property_id','properties.address','properties.owner_name')
+                    ->select('rent_agreements.*','tenants.tenant_name','tenants.tenant_mobile','properties.property_name','properties.address','properties.owner_name')
                     ->join('tenants','tenants.id','=','rent_agreements.tenant_id')
                     ->join('properties','properties.id','=','rent_agreements.property_id')
                     ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
-                    $actionBtn = '<a href="'.url('edit-property/'.$row->id).'" onclick="return actionconfirm()" class="edit btn btn-success btn-sm">Edit</a> <a href="'.url('delete-property/'.$row->id).'" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm">Delete</a>';
+                    $actionBtn = '<a href="'.url('view-agreement/'.$row->id).'"   class="edit btn btn-primary btn-sm"><i class="fa fa-file"></i></a>
+					<a href="'.url('edit-agreement/'.$row->id).'" onclick="return actionconfirm()" class="edit btn btn-success btn-sm"><i class="fa fa-edit"></i></a> <a href="'.url('delete-agreement/'.$row->id).'" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
                     return $actionBtn;
                 })
                 ->rawColumns(['action'])

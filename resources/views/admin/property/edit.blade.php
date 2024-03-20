@@ -38,9 +38,22 @@
                     <?php } ?>
                   </select>
                 </div>
+				
+				<div class="form-group col-md-6" id="property_number" style="display:<?php if($property->property_no==''){ echo "none"; }?>">
+                        <label for="exampleInputEmail1">Property Number</label>
+                        <input type="text" class="form-control" id="property_no" name="property_no" placeholder="Property Number" value="<?php echo $property->property_no?>">
+                          
+                      </div>
+					  
+					  
                 <div class="form-group col-md-6">
-                  <label for="exampleInputEmail1">Property Size</label>
+                  <label for="exampleInputEmail1">Saleable Property Size</label>
                   <input type="text" class="form-control" id="property_size" name="property_size" placeholder="Property Size in Sq Feet" value="<?php echo $property->property_size ?>">
+
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="exampleInputEmail1">Carpet Area</label>
+                  <input type="text" class="form-control" id="carpet_area" name="carpet_area" placeholder="Carpet area Size in Sq Feet" value="<?php echo $property->carpet_area ?>">
 
                 </div>
                 <div class="form-group col-md-6">
@@ -59,16 +72,26 @@
                   </select>
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="exampleInputConfirmPassword1">Charges/Rent</label>
-                  <input type="text" class="form-control" id="price_rent" name="price_rent" value="<?php echo $property->price_rent; ?>" placeholder="Charges/ Rent">
+                  <label for="exampleInputConfirmPassword1">Basic Rent</label>
+                  <input type="text" class="form-control" id="price_rent" name="price_rent" value="<?php echo $property->price_rent; ?>" placeholder="Basic Rent">
 
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="exampleInputConfirmPassword1">Security Deposit ( if Any )</label>
+                  <label for="exampleInputConfirmPassword1">Security Deposit</label>
                   <input type="text" class="form-control" id="security_deposit" name="security_deposit" placeholder="Security Deposit Amount" value="<?php echo $property->security_deposit; ?>">
 
                 </div>
-
+<div class="form-group col-md-6">
+                        <label for="exampleInputConfirmPassword1">Owner Name</label>
+                        <input type="text" class="form-control" id="owner_name" name="owner_name" placeholder="Owner Name" required value="<?php echo $property->owner_name; ?>">
+                         
+                      </div>
+					  
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputConfirmPassword1">Owner Mobile No.</label>
+                        <input type="text" class="form-control" id="owner_mobile_no" name="owner_mobile_no" placeholder="Owner Mobile No" required value="<?php echo $property->owner_mobile_no; ?>">
+                         
+                      </div>
 
                 <div class="form-group col-md-6">
                   <label for="exampleInputConfirmPassword1">Owner Email</label>
@@ -76,8 +99,8 @@
 
                 </div>
 
-                <div class="form-group col-md-3">
-                  <label for="exampleInputConfirmPassword1">Availability Status</label>
+                <div class="form-group col-md-6">
+                  <label for="exampleInputConfirmPassword1">Status</label>
                   <select name="availability_status" class="form-control">
                     <option value="">Select</option>
                     <option value="Available" <?php if ($property->availability_status == 'Available') {
@@ -89,7 +112,7 @@
                   </select>
 
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-6">
                   <label for="exampleInputConfirmPassword1">Furnishing Status</label>
                   <select name="furnishing_status" class="form-control">
                     <option value="">Select</option>
@@ -106,8 +129,102 @@
 
                 </div>
 
-
-
+						<div class="form-group col-md-6">
+                        <label for="exampleInputConfirmPassword1">Car Parking</label>
+                       <select name="car_parking" class="form-control" required>
+                        <option value="">Select</option>
+                        <option value="Yes" <?php if($property->car_parking=='Yes'){ echo "selected";}?>>Yes</option>
+                        <option value="No" <?php if($property->car_parking=='No'){ echo "selected";}?>>No</option>
+                       
+                       </select>
+                         
+                      </div>
+					  
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputConfirmPassword1">Facing Direction</label>
+                       <select name="facing_direction" class="form-control" required>
+                        <option value="">Select</option>
+                        <option value="East" <?php if($property->facing_direction=='East'){ echo "selected";}?>>East</option>
+                        <option value="West" <?php if($property->facing_direction=='West'){ echo "selected";}?>>West</option>
+						<option value="North" <?php if($property->facing_direction=='North'){ echo "selected";}?>>North</option>
+						<option value="South" <?php if($property->facing_direction=='South'){ echo "selected";}?>>South</option>
+                       
+                       </select>
+                      </div>
+					  
+					   <div class="form-group col-md-6">
+                        <label for="exampleInputUsername1">Maintenance Charge</label>
+                         <input Type="text" name="maintenance_charge" class="form-control" required placeholder="Enter Maintenance Charge" value="<?php echo $property->maintenance_charge?>">
+                      </div>
+					  
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputUsername1">Water Availability</label>
+                        <select name="water_availability" class="form-control" required>
+                        <option value="">Select</option>
+                        <option value="Yes" <?php if($property->water_availability=='Yes'){ echo "selected";}?>>Yes</option>
+                        <option value="No" <?php if($property->water_availability=='No'){ echo "selected";}?>>No</option>
+                       
+                       </select>
+                         
+                      </div>
+					  
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputConfirmPassword1">Status Of Electricity</label>
+                       <select name="status_of_electricity" class="form-control" required>
+                        <option value="">Select</option>
+                        <option value="Yes" <?php if($property->status_of_electricity=='Yes'){ echo "selected";}?>>Yes</option>
+                        <option value="No" <?php if($property->status_of_electricity=='No'){ echo "selected";}?>>No</option>
+                       
+                       </select>
+                         
+                      </div>
+					  
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputUsername1">Floor</label>
+                         <input Type="text" name="floor" value="<?php echo $property->floor?>" class="form-control" required placeholder="Enter Floor">
+                      </div>
+					  
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputUsername1">Landmark</label>
+                         <input Type="text" name="landmark" value="<?php echo $property->landmark?>" class="form-control" required placeholder="Enter Landmark">
+                      </div>
+					  
+					  <div class="form-group col-md-4">
+                    <label for="exampleInputConfirmPassword1">Country</label>
+                          <select name="country" id="country" class="form-control">
+							<option value="">Select</option>
+							<?php foreach($countries as $cont)
+							{?>
+							<option value="<?php echo $cont->id?>" <?php if($property->country==$cont->id){ echo "selected";}?>><?php echo $cont->country?></option>
+							<?php } ?>
+							</select>
+                    </div>
+					
+					 <div class="form-group col-md-4">
+                    <label for="exampleInputConfirmPassword1">State</label>
+                         <select name="state" id="state" class="form-control" onchange="getCities(this.value)">
+							<option value="">Select</option>
+							 <?php foreach($states as $cont)
+							{?>
+							<option value="<?php echo $cont->id?>" <?php if($property->state==$cont->id){ echo "selected";}?>><?php echo $cont->state?></option>
+							<?php } ?>
+							</select>
+                    </div>
+					
+					 <div class="form-group col-md-4">
+                    <label for="exampleInputConfirmPassword1">City</label>
+                        <select name="city" id="city" class="form-control">
+							<option value="">Select</option>
+							 <?php foreach($cities as $cont)
+							{?>
+							<option value="<?php echo $cont->id?>" <?php if($property->city==$cont->id){ echo "selected";}?>><?php echo $cont->city?></option>
+							<?php } ?>
+							</select>
+                    </div>
+<div class="form-group col-md-12">
+                  <label for="exampleInputConfirmPassword1">Address</label>
+                  <textarea name="address" id="address" class="form-control"><?php echo $property->address ?></textarea>
+                </div>
                 <div class="form-group col-md-12">
                   <label for="exampleInputConfirmPassword1">Description</label>
                   <textarea name="description" id="description" class="form-control"><?php echo $property->description ?></textarea>
@@ -135,15 +252,9 @@
                     <?php } ?>
                   </select>
                 </div>
-                <div class="form-group col-md-12">
-                  <label for="exampleInputConfirmPassword1">Tenant Criteria Added</label>
-                  <input type="text" name="tenant_criteria" class="form-control" value="<?php echo $property->tenant_criteria ?>">
-                </div>
+                 
 
-                <div class="form-group col-md-12">
-                  <label for="exampleInputConfirmPassword1">Address</label>
-                  <textarea name="address" id="address" class="form-control"><?php echo $property->address ?></textarea>
-                </div>
+                
 
 
 

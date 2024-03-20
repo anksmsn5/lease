@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
+Route::get('/details/{slug}', [App\Http\Controllers\FrontController::class, 'index'])->name('property-details');
 
 Auth::routes();
 
@@ -39,8 +40,11 @@ Route::get('/rent-agreement', [App\Http\Controllers\HomeController::class, 'rent
 Route::post('/get-properties-by-property-type', [App\Http\Controllers\HomeController::class, 'property_by_type'])->name('users.get-properties-by-property-type');
 Route::post('/get-property-data', [App\Http\Controllers\HomeController::class, 'getproperty_data'])->name('users.get-property-data');
 Route::post('/store-agreement', [App\Http\Controllers\HomeController::class, 'store_agreement'])->name('users.store-agreement');
+Route::post('/update-agreement', [App\Http\Controllers\HomeController::class, 'update_agreement'])->name('users.update-agreement');
 Route::get('/rent-agreement-list', [App\Http\Controllers\HomeController::class, 'agreements'])->name('users.rent-agreement-list');
 Route::get('/agreement-data', [App\Http\Controllers\HomeController::class, 'agreement_data'])->name('property.agreement-data');
+Route::get('/edit-agreement/{id}', [App\Http\Controllers\HomeController::class, 'edit_agreement'])->name('property.edit-agreement');
+Route::get('/delete-agreement/{id}', [App\Http\Controllers\HomeController::class, 'delete_agreement'])->name('property.delete-agreement');
 
 
 
@@ -64,10 +68,13 @@ Route::get('/agreement-data', [App\Http\Controllers\HomeController::class, 'agre
  Route::get('/property-type', [App\Http\Controllers\HomeController::class, 'property_type'])->name('property-type');
  Route::get('/propertype-list', [App\Http\Controllers\HomeController::class, 'propertype_list'])->name('masters.propertype-list');
  Route::post('/storePropertyType', [App\Http\Controllers\HomeController::class, 'storePropertyType'])->name('masters.storePropertyType');
-  Route::get('/edit-property-type/{id}', [App\Http\Controllers\HomeController::class, 'edit_property-type'])->name('masters.edit-property-type');
+ Route::post('/updatePropertyType', [App\Http\Controllers\HomeController::class, 'updatePropertyType'])->name('masters.updatePropertyType');
+  Route::get('/edit-property-type/{id}', [App\Http\Controllers\HomeController::class, 'edit_property_type'])->name('masters.edit-property-type');
+  Route::get('/delete-property-type/{id}', [App\Http\Controllers\HomeController::class, 'delete_property_type'])->name('masters.delete-property-type');
  
  
  Route::post('/storeFacility', [App\Http\Controllers\HomeController::class, 'storeFacility'])->name('masters.storeFacility');
+ Route::post('/get-property-no', [App\Http\Controllers\HomeController::class, 'get_property_no'])->name('masters.get-property-no');
  Route::get('/facilities-data', [App\Http\Controllers\HomeController::class, 'facilities_data'])->name('masters.facilities');
  Route::get('/edit-facility/{id}', [App\Http\Controllers\HomeController::class, 'edit_facility'])->name('masters.edit-facility');
  Route::post('/updateFacility', [App\Http\Controllers\HomeController::class, 'updateFacility'])->name('masters.updateFacility');

@@ -67,7 +67,7 @@
           </li>
 
               <li class="nav-item">
-            <a class="nav-link" href="<?php echo url("rent-agreement");?>">
+            <a class="nav-link" href="<?php echo url("rent-agreement-list");?>">
               <i class="mdi mdi-account-switch menu-icon"></i>
 
               <span class="menu-title">Rent Agreement</span>

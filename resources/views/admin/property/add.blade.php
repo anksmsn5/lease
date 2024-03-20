@@ -32,7 +32,7 @@
 					  
                       <div class="form-group col-md-6">
                         <label for="exampleInputUsername1">Property Type</label>
-                         <select name="property_type" class="form-control select2" required>
+                         <select name="property_type"  id="property_type" class="form-control select2" required>
                             <option value="">Select</option>
 							<?php foreach($type as $tp)
 							{?>
@@ -40,11 +40,22 @@
                             <?php } ?>
                          </select>
                       </div>
-                      <div class="form-group col-md-6">
-                        <label for="exampleInputEmail1">Property Size</label>
-                        <input type="text" class="form-control" id="property_size" name="property_size" placeholder="Property Size in Sq Feet" required>
+					  <div class="form-group col-md-6" id="property_number" style="display:none">
+                        <label for="exampleInputEmail1">Property Number</label>
+                        <input type="text" class="form-control" id="property_no" name="property_no" placeholder="Property Number">
                           
                       </div>
+                      <div class="form-group col-md-6">
+                        <label for="exampleInputEmail1">Saleable Property Size</label>
+                        <input type="text" class="form-control" id="property_size" name="property_size" placeholder="Property Size in Sq Feet" required>
+                          
+                      </div>   
+					  <div class="form-group col-md-6">
+                        <label for="exampleInputEmail1">Carpet Area</label>
+                        <input type="text" class="form-control" id="carpet_area" name="carpet_area" placeholder="Carpet Area in Sq Feet" required>
+                          
+                      </div>  
+					  
                       <div class="form-group col-md-6">
                         <label for="exampleInputPassword1">Property For</label>
                          <select name="type" class="form-control" required>
@@ -54,11 +65,14 @@
                             <option value="Lease">Lease</option>
                          </select>
                       </div>
-                      <div class="form-group col-md-6">
+
+					    <div class="form-group col-md-6">
                         <label for="exampleInputConfirmPassword1">Basic Rent</label>
-                        <input type="text" class="form-control" id="price_rent" name="price_rent" placeholder="Charges/ Rent" required>
+                        <input type="text" class="form-control" id="price_rent" name="price_rent" placeholder="Price Rent" required>
                          
                       </div>
+					  
+
                       <div class="form-group col-md-6">
                         <label for="exampleInputConfirmPassword1">Security Deposit</label>
                         <input type="text" class="form-control" id="security_deposit" name="security_deposit" placeholder="Security Deposit Amount" required>
@@ -85,7 +99,7 @@
                       </div>
                      
                        <div class="form-group col-md-6">
-                        <label for="exampleInputConfirmPassword1">Availability Status</label>
+                        <label for="exampleInputConfirmPassword1">Status</label>
                        <select name="availability_status" class="form-control" required>
                         <option value="">Select</option>
                         <option value="Available">Available</option>
@@ -135,7 +149,13 @@
 					  
 					  <div class="form-group col-md-6">
                         <label for="exampleInputUsername1">Water Availability</label>
-                         <input Type="text" name="water_availability" class="form-control" required placeholder="Enter Water Availability">
+                        <select name="water_availability" class="form-control" required>
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                       
+                       </select>
+                         
                       </div>
 					  
 					  <div class="form-group col-md-6">
@@ -159,19 +179,31 @@
                          <input Type="text" name="landmark" class="form-control" required placeholder="Enter Landmark">
                       </div>
 					  
-					  <div class="form-group col-md-6">
+					  <div class="form-group col-md-4">
                     <label for="exampleInputConfirmPassword1">Country</label>
-                         <input type="text" name="country" class="form-control" required placeholder="Enter Country">
+                          <select name="country" id="country" class="form-control">
+							<option value="">Select</option>
+							<?php foreach($countries as $cont)
+							{?>
+							<option value="<?php echo $cont->id?>"><?php echo $cont->country?></option>
+							<?php } ?>
+							</select>
                     </div>
 					
-					 <div class="form-group col-md-6">
+					 <div class="form-group col-md-4">
                     <label for="exampleInputConfirmPassword1">State</label>
-                         <input type="text" name="state" class="form-control" required placeholder="Enter state">
+                         <select name="state" id="state" class="form-control" onchange="getCities(this.value)">
+							<option value="">Select</option>
+							 
+							</select>
                     </div>
 					
-					 <div class="form-group col-md-6">
+					 <div class="form-group col-md-4">
                     <label for="exampleInputConfirmPassword1">City</label>
-                         <input type="text" name="city" class="form-control" required placeholder="Enter city">
+                        <select name="city" id="city" class="form-control">
+							<option value="">Select</option>
+							 
+							</select>
                     </div>
 
 
@@ -206,10 +238,7 @@
                             <?php } ?>
                          </select>
                     </div>
-                    <div class="form-group col-md-12">
-                    <label for="exampleInputConfirmPassword1">Tenant Criteria</label>
-                         <input type="text" name="tenant_criteria" class="form-control" required>
-                    </div>
+                     
 					
 					 
 
@@ -252,6 +281,31 @@
                     }
                 });
         });
+		
+		$("#property_type").change(function(){
+			 var id=$(this).val();
+            
+            var data = {id:id};
+
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo url("get-property-no");?>',
+                    data:data,
+                    success: function (response) {
+                        if(response=='Yes')
+						{
+							 $("#property_number").show();
+							
+						}
+						else
+						{
+							 $("#property_number").hide();
+							
+						}
+                    }
+                });
+			
+		});
 
         
 	   

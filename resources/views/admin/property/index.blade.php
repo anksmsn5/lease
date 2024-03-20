@@ -24,14 +24,18 @@
                     <table id="myTable" class="table table-bordered">
         <thead>
             <tr>
-                <th>Property ID</th>
+                <th> ID</th>
                 <th>Property Name</th>
                
-                <th>Property Type</th>
-                <th>Property Purpose</th>
-              
-                <th>Email</th>
-                <th>Property Area</th>
+                <th> Type</th>
+                <th> Purpose</th>
+
+                <th>Owner</th>
+                <th>Mobile</th>
+                <th> Area</th>                
+				<th>Rent (Rs.)</th>
+				<th>Security (Rs.)</th>
+				<th>Status</th>
                 
                 <th>Action</th>
             </tr>
@@ -73,9 +77,12 @@
                   {data: 'type', name: 'type'},
                  
                 
-                   {data: 'email', name: 'email'},
+                   {data: 'owner_name', name: 'owner_name'},
+                   {data: 'owner_mobile_no', name: 'owner_mobile_no'},
                    {data: 'property_size', name: 'property_size'},
-                   
+                  {data: 'price_rent', name: 'price_rent'},
+                  {data: 'security_deposit', name: 'security_deposit'},
+                  {data: 'statusBtn', name: 'statusBtn'},
                   {data: 'action', name: 'action'},
               ]
           });

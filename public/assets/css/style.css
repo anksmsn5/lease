@@ -13,6 +13,13 @@
     color: #444;
     line-height: 15px !important;
 }
+table#myTable td, th {
+    font-size: 12px !important;
+    padding: 5px !important;
+}
+.btn {
+    padding: 5px !important;
+}
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
 	padding-left:20px;
 }
