@@ -13,6 +13,9 @@
     color: #444;
     line-height: 15px !important;
 }
+label.smallabel {
+    font-size: 13px;
+}
 table#myTable td, th {
     font-size: 12px !important;
     padding: 5px !important;

@@ -14,11 +14,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+  return view('auth.login');
 });
 Route::get('/details/{slug}', [App\Http\Controllers\FrontController::class, 'index'])->name('property-details');
 
 Auth::routes();
+
+Route::get('/rent-collection', [App\Http\Controllers\RentController::class, 'index'])->name('rent.rent-collection');
+Route::get('/collect-rent', [App\Http\Controllers\RentController::class, 'collect'])->name('rent.collect-rent');
+Route::post('/collect-rent', [App\Http\Controllers\RentController::class, 'collect_rent'])->name('rent.collect-rents');
+Route::post('/make-payment', [App\Http\Controllers\RentController::class, 'make_payment'])->name('rent.make-payment');
+Route::get('/receipt/{slug}', [App\Http\Controllers\RentController::class, 'receipt'])->name('rent.receipt');
+Route::get('/payments-data', [App\Http\Controllers\RentController::class, 'receipt_list'])->name('payment.data');
+
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/get-states-by-country', [App\Http\Controllers\HomeController::class, 'get_states_by_country'])->name('get-states-by-country');
@@ -46,46 +55,50 @@ Route::get('/agreement-data', [App\Http\Controllers\HomeController::class, 'agre
 Route::get('/edit-agreement/{id}', [App\Http\Controllers\HomeController::class, 'edit_agreement'])->name('property.edit-agreement');
 Route::get('/delete-agreement/{id}', [App\Http\Controllers\HomeController::class, 'delete_agreement'])->name('property.delete-agreement');
 
+Route::get('/template-one/{id}', [App\Http\Controllers\HomeController::class, 'template_one'])->name('property.template-one');
+Route::get('/template-two/{id}', [App\Http\Controllers\HomeController::class, 'template_two'])->name('property.template-two');
+Route::get('/template-three/{id}', [App\Http\Controllers\HomeController::class, 'template_three'])->name('property.template-three');
 
 
 
- 
- Route::get('/amenities', [App\Http\Controllers\HomeController::class, 'amenities'])->name('masters.amenities-list');
- Route::get('/delete-amenity/{id}', [App\Http\Controllers\HomeController::class, 'delete_amenity'])->name('masters.delete-amenity');
- Route::get('/edit-amenity/{id}', [App\Http\Controllers\HomeController::class, 'edit_amenity'])->name('masters.edit-amenity');
- Route::get('/amenities-data', [App\Http\Controllers\HomeController::class, 'amenities_data'])->name('masters.amenities');
- Route::post('/storeAmenity', [App\Http\Controllers\HomeController::class, 'storeAmenity'])->name('masters.storeAmenity');
- Route::post('/updateAmenity', [App\Http\Controllers\HomeController::class, 'updateAmenity'])->name('masters.updateAmenity');
 
 
- Route::get('/facilities', [App\Http\Controllers\HomeController::class, 'facilities'])->name('facilities');
- Route::post('/storeFacility', [App\Http\Controllers\HomeController::class, 'storeFacility'])->name('masters.storeFacility');
- Route::get('/facilities-data', [App\Http\Controllers\HomeController::class, 'facilities_data'])->name('masters.facilities');
- Route::get('/edit-facility/{id}', [App\Http\Controllers\HomeController::class, 'edit_facility'])->name('masters.edit-facility');
- Route::post('/updateFacility', [App\Http\Controllers\HomeController::class, 'updateFacility'])->name('masters.updateFacility');
- Route::get('/delete-facility/{id}', [App\Http\Controllers\HomeController::class, 'delete_facility'])->name('masters.delete-facility');
- 
- Route::get('/property-type', [App\Http\Controllers\HomeController::class, 'property_type'])->name('property-type');
- Route::get('/propertype-list', [App\Http\Controllers\HomeController::class, 'propertype_list'])->name('masters.propertype-list');
- Route::post('/storePropertyType', [App\Http\Controllers\HomeController::class, 'storePropertyType'])->name('masters.storePropertyType');
- Route::post('/updatePropertyType', [App\Http\Controllers\HomeController::class, 'updatePropertyType'])->name('masters.updatePropertyType');
-  Route::get('/edit-property-type/{id}', [App\Http\Controllers\HomeController::class, 'edit_property_type'])->name('masters.edit-property-type');
-  Route::get('/delete-property-type/{id}', [App\Http\Controllers\HomeController::class, 'delete_property_type'])->name('masters.delete-property-type');
- 
- 
- Route::post('/storeFacility', [App\Http\Controllers\HomeController::class, 'storeFacility'])->name('masters.storeFacility');
- Route::post('/get-property-no', [App\Http\Controllers\HomeController::class, 'get_property_no'])->name('masters.get-property-no');
- Route::get('/facilities-data', [App\Http\Controllers\HomeController::class, 'facilities_data'])->name('masters.facilities');
- Route::get('/edit-facility/{id}', [App\Http\Controllers\HomeController::class, 'edit_facility'])->name('masters.edit-facility');
- Route::post('/updateFacility', [App\Http\Controllers\HomeController::class, 'updateFacility'])->name('masters.updateFacility');
- Route::get('/delete-facility/{id}', [App\Http\Controllers\HomeController::class, 'delete_facility'])->name('masters.delete-facility');
- 
- Route::get('/responsibility', [App\Http\Controllers\HomeController::class, 'responsibility'])->name('masters.responsibility');
+Route::get('/amenities', [App\Http\Controllers\HomeController::class, 'amenities'])->name('masters.amenities-list');
+Route::get('/delete-amenity/{id}', [App\Http\Controllers\HomeController::class, 'delete_amenity'])->name('masters.delete-amenity');
+Route::get('/edit-amenity/{id}', [App\Http\Controllers\HomeController::class, 'edit_amenity'])->name('masters.edit-amenity');
+Route::get('/amenities-data', [App\Http\Controllers\HomeController::class, 'amenities_data'])->name('masters.amenities');
+Route::post('/storeAmenity', [App\Http\Controllers\HomeController::class, 'storeAmenity'])->name('masters.storeAmenity');
+Route::post('/updateAmenity', [App\Http\Controllers\HomeController::class, 'updateAmenity'])->name('masters.updateAmenity');
 
- 
- 
-  Route::post('/storeResponsibility', [App\Http\Controllers\HomeController::class, 'storeResponsibility'])->name('masters.storeResponsibility');
-  Route::get('/responsibilities-list', [App\Http\Controllers\HomeController::class, 'responsibilities_list'])->name('masters.responsibilities-list');
-  Route::get('/edit-responsibility/{id}', [App\Http\Controllers\HomeController::class, 'edit_responsibility'])->name('masters.edit-responsibility');
-   Route::get('/delete-responsibility/{id}', [App\Http\Controllers\HomeController::class, 'delete_responsibility'])->name('masters.delete-responsibility');
- Route::post('/updateResponsibility', [App\Http\Controllers\HomeController::class, 'updateResponsibility'])->name('masters.updateResponsibility');
+
+Route::get('/facilities', [App\Http\Controllers\HomeController::class, 'facilities'])->name('facilities');
+Route::post('/storeFacility', [App\Http\Controllers\HomeController::class, 'storeFacility'])->name('masters.storeFacility');
+Route::get('/facilities-data', [App\Http\Controllers\HomeController::class, 'facilities_data'])->name('masters.facilities');
+Route::get('/edit-facility/{id}', [App\Http\Controllers\HomeController::class, 'edit_facility'])->name('masters.edit-facility');
+Route::post('/updateFacility', [App\Http\Controllers\HomeController::class, 'updateFacility'])->name('masters.updateFacility');
+Route::get('/delete-facility/{id}', [App\Http\Controllers\HomeController::class, 'delete_facility'])->name('masters.delete-facility');
+
+Route::get('/property-type', [App\Http\Controllers\HomeController::class, 'property_type'])->name('property-type');
+Route::get('/propertype-list', [App\Http\Controllers\HomeController::class, 'propertype_list'])->name('masters.propertype-list');
+Route::post('/storePropertyType', [App\Http\Controllers\HomeController::class, 'storePropertyType'])->name('masters.storePropertyType');
+Route::post('/updatePropertyType', [App\Http\Controllers\HomeController::class, 'updatePropertyType'])->name('masters.updatePropertyType');
+Route::get('/edit-property-type/{id}', [App\Http\Controllers\HomeController::class, 'edit_property_type'])->name('masters.edit-property-type');
+Route::get('/delete-property-type/{id}', [App\Http\Controllers\HomeController::class, 'delete_property_type'])->name('masters.delete-property-type');
+
+
+Route::post('/storeFacility', [App\Http\Controllers\HomeController::class, 'storeFacility'])->name('masters.storeFacility');
+Route::post('/get-property-no', [App\Http\Controllers\HomeController::class, 'get_property_no'])->name('masters.get-property-no');
+Route::get('/facilities-data', [App\Http\Controllers\HomeController::class, 'facilities_data'])->name('masters.facilities');
+Route::get('/edit-facility/{id}', [App\Http\Controllers\HomeController::class, 'edit_facility'])->name('masters.edit-facility');
+Route::post('/updateFacility', [App\Http\Controllers\HomeController::class, 'updateFacility'])->name('masters.updateFacility');
+Route::get('/delete-facility/{id}', [App\Http\Controllers\HomeController::class, 'delete_facility'])->name('masters.delete-facility');
+
+Route::get('/responsibility', [App\Http\Controllers\HomeController::class, 'responsibility'])->name('masters.responsibility');
+
+
+
+Route::post('/storeResponsibility', [App\Http\Controllers\HomeController::class, 'storeResponsibility'])->name('masters.storeResponsibility');
+Route::get('/responsibilities-list', [App\Http\Controllers\HomeController::class, 'responsibilities_list'])->name('masters.responsibilities-list');
+Route::get('/edit-responsibility/{id}', [App\Http\Controllers\HomeController::class, 'edit_responsibility'])->name('masters.edit-responsibility');
+Route::get('/delete-responsibility/{id}', [App\Http\Controllers\HomeController::class, 'delete_responsibility'])->name('masters.delete-responsibility');
+Route::post('/updateResponsibility', [App\Http\Controllers\HomeController::class, 'updateResponsibility'])->name('masters.updateResponsibility');
