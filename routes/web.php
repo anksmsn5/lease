@@ -53,6 +53,7 @@ Route::post('/update-agreement', [App\Http\Controllers\HomeController::class, 'u
 Route::get('/rent-agreement-list', [App\Http\Controllers\HomeController::class, 'agreements'])->name('users.rent-agreement-list');
 Route::get('/agreement-data', [App\Http\Controllers\HomeController::class, 'agreement_data'])->name('property.agreement-data');
 Route::get('/edit-agreement/{id}', [App\Http\Controllers\HomeController::class, 'edit_agreement'])->name('property.edit-agreement');
+Route::get('/download-agreement/{id}', [App\Http\Controllers\HomeController::class, 'download_agreement'])->name('property.download-agreement');
 Route::get('/delete-agreement/{id}', [App\Http\Controllers\HomeController::class, 'delete_agreement'])->name('property.delete-agreement');
 
 Route::get('/template-one/{id}', [App\Http\Controllers\HomeController::class, 'template_one'])->name('property.template-one');

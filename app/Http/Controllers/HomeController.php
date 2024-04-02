@@ -16,9 +16,12 @@ use App\Models\Rent;
 use App\Models\Responsibility;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 use DataTables;
 use Auth;
 use DB;
+use GuzzleHttp\Psr7\Response;
 use PDF;
 
 class HomeController extends Controller
@@ -718,7 +721,7 @@ class HomeController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $actionBtn = '<a href="javascript:void(0)"   class="edit btn btn-primary btn-sm" onclick="downLoadAgreemtn(' . $row->id . ')"><i class="fa fa-file"></i></a>
+                    $actionBtn = '<a href="' . url('download-agreement/' . $row->id) . '"   class="edit btn btn-primary btn-sm"><i class="fa fa-file"></i></a>
 					<a href="' . url('edit-agreement/' . $row->id) . '" onclick="return actionconfirm()" class="edit btn btn-success btn-sm"><i class="fa fa-edit"></i></a> <a href="' . url('delete-agreement/' . $row->id) . '" onclick="return actionconfirm()" class="delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
                     return $actionBtn;
                 })
@@ -729,7 +732,60 @@ class HomeController extends Controller
 
 
 
+    public function download_agreement($id)
+    {
 
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+
+        $section = $phpWord->addSection();
+
+        $html = '<div align="center"><h1 align="center" style="font-size:25px;text-align:center;"><u>Employment Offer Letter</u></h1></div><div class="container">
+ 
+<p><b>Date: ' . date("d-M-Y H:i:s") . '</b></p>
+
+<p><b></b></p>
+<p>E 2679 Jawahar Vihar Colony</p>
+
+
+<p>Dear [Mr./Miss./Mrs./Ms.]  , </p>
+ 
+<p>Congratulations! We are pleased to confirm that you have been selected to work for Avanti Bufa Pvt. Ltd. We are delighted to make you the following job offer. </p>
+ 
+<p>The position we are offering you is that of [Job Title] at a monthly salary of [Salary per month] with an annual cost to company ..................... . This position reports to ....................., ...................... Your working hours will be from ....................., ..................... to ...................... </p> 
+ 
+<p>Benefits for the position include: (Use if relevant to the position)</p>
+<p>Benefit A (Casual Leave of 12 days per annum)</p>
+<p>Benefit B (Employer State Insurance Corporation ESIC Coverage)</p>
+<p>Benefit C</p>
+
+<p>We would like you to start work on [Desired starting date] at [Desired starting time]. Please report to [Name of person to report on start date], for documentation and orientation. If this date is not acceptable, please contact me immediately. </p>
+ 
+<p>Please sign the enclosed copy of this letter and return it to me by [Last date for offer acceptance] to indicate your acceptance of this offer. </p>
+ 
+<p>We are confident you will be able to make a significant contribution to the success of our [Company Name] and look forward to working with you. </p>
+ 
+<p>Sincerely, </p>
+ 
+
+
+<p>(Name of person authorized to make offer) </p>
+<p>HR Manager</p>
+Avanti Bufa Pvt. Ltd.<p></p>
+
+
+</div>';
+
+
+
+        $objWriter = \PhpOffice\PhpWord\Shared\Html::addHtml($section, $html);
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        try {
+
+            $objWriter->save(storage_path('employment-offer-letter.docx'));
+        } catch (Exception $e) {
+        }
+    }
 
 
 
